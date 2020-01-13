@@ -1,0 +1,6 @@
+<launch>
+
+  <node pkg="masc_relay" type="masc_relay_node" name="masc_relay_node" output="screen">
+  </node>
+
+</launch>

@@ -1,0 +1,53 @@
+project(masc_relay)
+cmake_minimum_required(VERSION 3.14)
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(catkin REQUIRED
+  COMPONENTS
+    roscpp
+    std_msgs
+    sensor_msgs
+    pcl_ros
+    pcl_conversions
+)
+
+find_package(Boost REQUIRED)
+find_package(PCL 1.8 REQUIRED)
+find_package(beam REQUIRED utils)
+
+catkin_package(
+  INCLUDE_DIRS
+    include
+  LIBRARIES
+    ${PROJECT_NAME}
+  CATKIN_DEPENDS
+    std_msgs
+    sensor_msgs
+    roscpp
+  DEPENDS
+    BOOST
+)
+
+## Build ##
+# Relay library
+add_library(${PROJECT_NAME}
+  src/DT100RelayServer.cpp
+)
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    include
+    ${catkin_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIR}
+)
+target_link_libraries(${PROJECT_NAME}
+  beam::beam
+  ${catkin_LIBRARIES}
+)
+
+# Relay node
+add_executable(${PROJECT_NAME}_node
+  src/${PROJECT_NAME}_node.cpp
+)
+target_link_libraries(${PROJECT_NAME}_node
+  ${PROJECT_NAME}
+)
