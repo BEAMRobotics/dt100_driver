@@ -1,6 +1,10 @@
-project(masc_relay)
+project(mari_relay)
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
+
+find_package(Boost REQUIRED)
+find_package(PCL 1.8 REQUIRED)
+find_package(beam REQUIRED utils)
 
 find_package(catkin REQUIRED
   COMPONENTS
@@ -10,10 +14,6 @@ find_package(catkin REQUIRED
     pcl_ros
     pcl_conversions
 )
-
-find_package(Boost REQUIRED)
-find_package(PCL 1.8 REQUIRED)
-find_package(beam REQUIRED utils)
 
 catkin_package(
   INCLUDE_DIRS
@@ -31,7 +31,7 @@ catkin_package(
 ## Build ##
 # Relay library
 add_library(${PROJECT_NAME}
-  src/DT100RelayServer.cpp
+  src/DT100RelayClient.cpp
 )
 target_include_directories(${PROJECT_NAME}
   PUBLIC

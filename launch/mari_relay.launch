@@ -1,0 +1,7 @@
+<launch>
+
+  <node pkg="mari_relay" type="mari_relay_node" name="mari_relay_node" output="screen">
+    <param name="ip" value="192.168.0.4" />
+  </node>
+
+</launch>

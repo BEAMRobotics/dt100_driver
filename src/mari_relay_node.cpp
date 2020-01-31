@@ -1,12 +1,12 @@
-#include "masc_relay/DT100RelayServer.h"
+#include "mari_relay/DT100RelayClient.h"
 
 #include <ros/ros.h>
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "masc_relay_node");
+  ros::init(argc, argv, "mari_relay_node");
   try {
     boost::asio::io_service io_service;
-    masc_sync::DT100RelayServer server(io_service);
+    mari_sync::DT100RelayClient client(io_service);
     io_service.run();
 
     while (ros::ok()){
