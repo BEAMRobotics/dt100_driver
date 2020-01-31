@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>masc_relay</name>
+  <name>mari_relay</name>
   <version>0.0.1</version>
-  <description>relay for point-cloud messages from the DT100 Multi-beam sonar</description>
+  <description>
+      relay for point-cloud messages from the DT100 multi-beam sonar
+  </description>
 
   <author email="adthoms@uwaterloo.ca">Alexander Thoms</author>
   <maintainer email="adthoms@uwaterloo.ca">Alexander Thoms</maintainer>
