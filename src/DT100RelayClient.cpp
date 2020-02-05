@@ -7,7 +7,6 @@
 #include <pcl/point_types.h>
 #include <ros/time.h>
 #include <string>
-#include <sstream>
 
 namespace mari_sync {
 
