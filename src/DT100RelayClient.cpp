@@ -1,89 +1,89 @@
-#include "mari_relay/DT100RelayClient.h"
+#include <mari_relay/DT100RelayClient.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
+#include <pcl_ros/point_cloud.h>
+#include <ros/time.h>
 
 #include <beam_utils/angles.hpp>
 #include <beam_utils/time.hpp>
-#include <pcl_conversions/pcl_conversions.h>
-#include <pcl_ros/point_cloud.h>
-#include <pcl/point_types.h>
-#include <ros/time.h>
 #include <string>
 
 namespace mari_sync {
 
 DT100RelayClient::DT100RelayClient(boost::asio::io_service& io_service)
     : socket_(io_service) {
+  nh_.param<std::string>("ip", ip_, "192.168.0.4");
+  ROS_INFO("DTOO packets will be sent to %s:%i", ip_.c_str(), port_);
 
-    nh_.param<std::string>("ip", ip_, "192.168.0.4");
-    ROS_INFO("DTOO packets will be sent to %s:%i",ip_.c_str(), port_);
-
-    socket_.open(udp::v4());
-    socket_.bind(udp::endpoint(address::from_string(ip_), port_));
-    Receive();
+  socket_.open(udp::v4());
+  socket_.bind(udp::endpoint(address::from_string(ip_), port_));
+  Receive();
 }
 
 void DT100RelayClient::Receive() {
-
-    socket_.async_receive_from(
-        boost::asio::buffer(recv_buffer_),remote_endpoint_,
-        boost::bind(&DT100RelayClient::HandleReceive, this,
-        boost::asio::placeholders::error,
-        boost::asio::placeholders::bytes_transferred));
+  socket_.async_receive_from(
+      boost::asio::buffer(recv_buffer_), remote_endpoint_,
+      boost::bind(&DT100RelayClient::HandleReceive, this,
+                  boost::asio::placeholders::error,
+                  boost::asio::placeholders::bytes_transferred));
 }
 
 void DT100RelayClient::HandleReceive(const boost::system::error_code& error,
-                                    std::size_t bytes_transferred) {
-
-    if (error) {
-        ROS_INFO("Receive failed: %s",error.message());
-        return;
-    }
-    ROS_INFO("Received: %d bytes", bytes_transferred);
-    ParseDT100();
-    Receive();
+                                     std::size_t bytes_transferred) {
+  if (error) {
+    ROS_INFO("Receive failed: %s", error.message());
+    return;
+  }
+  ROS_INFO("Received: %d bytes", bytes_transferred);
+  ParseDT100();
+  Receive();
 }
 
 void DT100RelayClient::ParseDT100() {
+  // Parse DT100 bitstreams by:
+  // 1) getting sonar parameters (latency in 100 microseconds)
+  double num_beams =
+      static_cast<double>(recv_buffer_[70] << 8 | recv_buffer_[71]);
+  double range_res =
+      static_cast<double>(recv_buffer_[85] << 8 | recv_buffer_[86]);
+  double ping_latency =
+      static_cast<double>(recv_buffer_[118] << 8 | recv_buffer_[119]);
+  double data_latency =
+      static_cast<double>(recv_buffer_[120] << 8 | recv_buffer_[121]);
 
-    // Parse DT100 bitstreams by:
-    // 1) getting sonar parameters (latency in 100 microseconds)
-    double num_beams = static_cast<double>(recv_buffer_[70]<<8|recv_buffer_[71]);
-    double range_res = static_cast<double>(recv_buffer_[85]<<8|recv_buffer_[86]);
-    double ping_latency = static_cast<double>(recv_buffer_[118]<<8|recv_buffer_[119]);
-    double data_latency = static_cast<double>(recv_buffer_[120]<<8|recv_buffer_[121]);
+  // 2) converting sonar range and bearing measurements into xyz point cloud
+  pcl::PointCloud<pcl::PointXYZ> cloud;
+  cloud.width = num_beams;
+  cloud.height = 1;
+  cloud.is_dense = false;
+  cloud.points.resize(cloud.width * cloud.height);
 
-    // 2) converting sonar range and bearing measurements into xyz point cloud
-    pcl::PointCloud<pcl::PointXYZ> cloud;
-    cloud.width = num_beams;
-    cloud.height = 1;
-    cloud.is_dense = false;
-    cloud.points.resize (cloud.width*cloud.height);
+  int j = 0;
+  double theta = 210;
+  double del_theta = 120 / num_beams;
 
-    int j = 0;
-    double theta = 210;
-    double del_theta = 120/num_beams;
+  for (int i = 256; i < (256 + 2 * num_beams - 1); i += 2) {
+    unsigned char r = (recv_buffer_[i] << 8 | recv_buffer_[i + 1]);
+    double range = static_cast<double>(r) * range_res / 1000;
+    cloud.points[j].x = range * cos(beam::deg2rad(theta));
+    cloud.points[j].y = range * sin(beam::deg2rad(theta));
+    cloud.points[j].z = 0;
+    theta += del_theta;
+    j++;
+  }
 
-    for (int i = 256; i < (256 + 2*num_beams-1); i+=2) {
-        unsigned char r = (recv_buffer_[i]<<8|recv_buffer_[i+1]);
-        double range = static_cast<double>(r)*range_res/1000;
-        cloud.points[j].x = range*cos(beam::deg2rad(theta));
-        cloud.points[j].y = range*sin(beam::deg2rad(theta));
-        cloud.points[j].z = 0;
-        theta+=del_theta;
-        j++;
-    }
+  // 3) stamping sonar pings in ROS time
+  ros::Duration lat1(data_latency * 1e-4);
+  ros::Duration lat2(ping_latency * 1e-4);
+  ros::Time stamp = ros::Time::now() - lat1 - lat2;
 
-    // 3) stamping sonar pings in ROS time
-    ros::Duration lat1(data_latency*1e-4);
-    ros::Duration lat2(ping_latency*1e-4);
-    ros::Time stamp = ros::Time::now() - lat1 - lat2;
-
-    // // 4) Publish PointCloud Message
-    sensor_msgs::PointCloud2 msg;
-    pcl::toROSMsg(cloud, msg);
-    msg.header.stamp = stamp;
-    msg.header.frame_id = frameID_;
-    publisher_.publish(msg);
-    ros::spinOnce();
+  // 4) Publish PointCloud Message
+  sensor_msgs::PointCloud2 msg;
+  pcl::toROSMsg(cloud, msg);
+  msg.header.stamp = stamp;
+  msg.header.frame_id = frameID_;
+  publisher_.publish(msg);
+  ros::spinOnce();
 }
 
-}
+} // namespace mari_sync
