@@ -4,8 +4,8 @@
 #include <pcl_ros/point_cloud.h>
 #include <ros/time.h>
 
-#include <beam_utils/angles.hpp>
-#include <beam_utils/time.hpp>
+#include <beam_utils/angles.h>
+#include <beam_utils/time.h>
 #include <string>
 
 namespace mari_sync {
@@ -65,8 +65,8 @@ void DT100RelayClient::ParseDT100() {
   for (int i = 256; i < (256 + 2 * num_beams - 1); i += 2) {
     unsigned char r = (recv_buffer_[i] << 8 | recv_buffer_[i + 1]);
     double range = static_cast<double>(r) * range_res / 1000;
-    cloud.points[j].x = range * cos(beam::deg2rad(theta));
-    cloud.points[j].y = range * sin(beam::deg2rad(theta));
+    cloud.points[j].x = range * cos(beam::Deg2Rad(theta));
+    cloud.points[j].y = range * sin(beam::Deg2Rad(theta));
     cloud.points[j].z = 0;
     theta += del_theta;
     j++;
