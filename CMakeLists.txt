@@ -19,7 +19,7 @@ catkin_package(
   INCLUDE_DIRS
     include
   LIBRARIES
-    DT100RelayClient
+    ${PROJECT_NAME}
   CATKIN_DEPENDS
     std_msgs
     sensor_msgs
@@ -35,16 +35,17 @@ include_directories(
 
 ## Build ##
 # Relay library
-add_library(DT100RelayClient
+add_library(${PROJECT_NAME}
   src/DT100RelayClient.cpp
 )
-target_include_directories(DT100RelayClient
+
+target_include_directories(${PROJECT_NAME}
   PUBLIC
     include
     ${catkin_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIR}
 )
-target_link_libraries(DT100RelayClient
+target_link_libraries(${PROJECT_NAME}
   beam::beam
   ${catkin_LIBRARIES}
 )
@@ -54,7 +55,7 @@ add_executable(DT100_relay src/DT100_relay.cpp
 )
 target_link_libraries(DT100_relay
   ${catkin_LIBRARIES}
-  DT100RelayClient
+  ${PROJECT_NAME}
 )
 
 #Virtual Machine node

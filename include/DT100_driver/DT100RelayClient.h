@@ -11,7 +11,7 @@ using boost::asio::ip::udp;
 
 class DT100RelayClient {
  public:
-  DT100RelayClient(boost::asio::io_service& io_service);
+  explicit DT100RelayClient(boost::asio::io_service& io_service);
 
  private:
   int port_ = 4040;
