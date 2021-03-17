@@ -1,11 +1,12 @@
-#include <mari_relay/DT100RelayClient.h>
+#include <DT100_driver/DT100RelayClient.h>
 #include <ros/ros.h>
+#include <boost/asio.hpp>
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "mari_relay_node");
+  ros::init(argc, argv, "DT100_relay");
   try {
     boost::asio::io_service io_service;
-    mari_sync::DT100RelayClient client(io_service);
+    DT100RelayClient client(io_service);
     io_service.run();
 
     while (ros::ok()) {

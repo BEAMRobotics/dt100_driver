@@ -6,14 +6,12 @@
 
 #include <boost/asio.hpp>
 
-namespace mari_sync {
-
 using boost::asio::ip::address;
 using boost::asio::ip::udp;
 
 class DT100RelayClient {
  public:
-  explicit DT100RelayClient(boost::asio::io_service& io_service);
+  DT100RelayClient(boost::asio::io_service& io_service);
 
  private:
   int port_ = 4040;
@@ -24,7 +22,7 @@ class DT100RelayClient {
   std::string frameID_ = "DT100";
   ros::NodeHandle nh_ = ros::NodeHandle{};
   ros::Publisher publisher_ =
-      nh_.advertise<sensor_msgs::PointCloud2>("mari_relay", 1);
+      nh_.advertise<sensor_msgs::PointCloud2>("DT100_scans", 1);
 
   void Receive();
 
@@ -33,5 +31,3 @@ class DT100RelayClient {
 
   void ParseDT100();
 };
-
-}  // namespace mari_sync

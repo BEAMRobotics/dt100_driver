@@ -1,5 +1,5 @@
 # DT100_driver
-ROS driver for the Imagenex DT100 multibeam profiling sonar.  UDP is used internally to communicate between the sonar's virtual machine and the scan forming node.  Scans are published on /dt100_scans
+ROS driver for the Imagenex DT100 multibeam profiling sonar.  A Windows XP virtual machine is launched that receives raw packets from the sonar.  A relay node is launch that forms scans.  UDP is used internally to communicate between the sonar's virtual machine and the scan forming node.  Scans are published on /DT100_scans
 
 TO-DO LIST:
 

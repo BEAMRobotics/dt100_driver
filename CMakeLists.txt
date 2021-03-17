@@ -1,4 +1,4 @@
-project(mari_relay)
+project(DT100_driver)
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -19,7 +19,7 @@ catkin_package(
   INCLUDE_DIRS
     include
   LIBRARIES
-    ${PROJECT_NAME}
+    DT100RelayClient
   CATKIN_DEPENDS
     std_msgs
     sensor_msgs
@@ -35,16 +35,16 @@ include_directories(
 
 ## Build ##
 # Relay library
-add_library(DT100_driver
+add_library(DT100RelayClient
   src/DT100RelayClient.cpp
 )
-target_include_directories(DT100_driver
+target_include_directories(DT100RelayClient
   PUBLIC
     include
     ${catkin_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIR}
 )
-target_link_libraries(DT100_driver
+target_link_libraries(DT100RelayClient
   beam::beam
   ${catkin_LIBRARIES}
 )
@@ -54,6 +54,7 @@ add_executable(DT100_relay src/DT100_relay.cpp
 )
 target_link_libraries(DT100_relay
   ${catkin_LIBRARIES}
+  DT100RelayClient
 )
 
 #Virtual Machine node

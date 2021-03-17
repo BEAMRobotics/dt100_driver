@@ -1,4 +1,4 @@
-#include <mari_relay/DT100RelayClient.h>
+#include <DT100_driver/DT100RelayClient.h>
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl_ros/point_cloud.h>
@@ -7,8 +7,6 @@
 #include <beam_utils/angles.h>
 #include <beam_utils/time.h>
 #include <string>
-
-namespace mari_sync {
 
 DT100RelayClient::DT100RelayClient(boost::asio::io_service& io_service)
     : socket_(io_service) {
@@ -85,5 +83,3 @@ void DT100RelayClient::ParseDT100() {
   publisher_.publish(msg);
   ros::spinOnce();
 }
-
-} // namespace mari_sync
