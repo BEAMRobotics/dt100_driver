@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>mari_relay</name>
+  <name>DT100_driver</name>
   <version>0.0.1</version>
   <description>
-      relay for point-cloud messages from the DT100 multi-beam sonar
+      ROS driver for Imagenex DT100 multibeam profiling sensor.
   </description>
 
   <author email="adthoms@uwaterloo.ca">Alexander Thoms</author>
+  <author email="gearle@uwaterloo.ca">Gabriel Earle</author>
   <maintainer email="adthoms@uwaterloo.ca">Alexander Thoms</maintainer>
+  <maintainer email="gearle@uwaterloo.ca">Gabriel Earle</maintainer>
 
   <license>BSD</license>
 

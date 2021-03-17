@@ -1,6 +1,6 @@
 <launch>
 
-  <node pkg="mari_relay" type="mari_relay_node" name="mari_relay_node" output="screen">
+  <node pkg="DT100_driver" type="DT100_driver" name="DT100_driver" output="screen">
     <param name="ip" value="192.168.0.4" />
   </node>
 

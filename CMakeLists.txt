@@ -28,26 +28,37 @@ catkin_package(
     BOOST
 )
 
+include_directories(
+ include
+  ${catkin_INCLUDE_DIRS}
+)
+
 ## Build ##
 # Relay library
-add_library(${PROJECT_NAME}
+add_library(DT100_driver
   src/DT100RelayClient.cpp
 )
-target_include_directories(${PROJECT_NAME}
+target_include_directories(DT100_driver
   PUBLIC
     include
     ${catkin_INCLUDE_DIRS}
     ${Boost_INCLUDE_DIR}
 )
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(DT100_driver
   beam::beam
   ${catkin_LIBRARIES}
 )
 
 # Relay node
-add_executable(${PROJECT_NAME}_node
-  src/${PROJECT_NAME}_node.cpp
+add_executable(DT100_relay src/DT100_relay.cpp
 )
-target_link_libraries(${PROJECT_NAME}_node
-  ${PROJECT_NAME}
+target_link_libraries(DT100_relay
+  ${catkin_LIBRARIES}
+)
+
+#Virtual Machine node
+add_executable(DT100_virtual_machine src/DT100_virtual_machine.cpp)
+
+target_link_libraries(DT100_virtual_machine
+   ${catkin_LIBRARIES}
 )
