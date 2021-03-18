@@ -31,10 +31,10 @@ void DT100RelayClient::HandleReceive(const boost::system::error_code &error,
 {
   if (error)
   {
-    ROS_INFO("Receive failed: %s", error.message());
+    ROS_INFO("Receive failed: %s", error.message().c_str());
     return;
   }
-  ROS_INFO("Received: %d bytes", bytes_transferred);
+  ROS_INFO("Received: %d bytes", static_cast<int>(bytes_transferred));
   ParseDT100();
   Receive();
 }
