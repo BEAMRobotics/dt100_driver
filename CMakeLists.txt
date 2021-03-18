@@ -46,16 +46,15 @@ target_include_directories(${PROJECT_NAME}
     ${Boost_INCLUDE_DIR}
 )
 target_link_libraries(${PROJECT_NAME}
-  beam::beam
   ${catkin_LIBRARIES}
 )
 
 # Relay node
-add_executable(DT100_relay src/DT100_relay.cpp
-)
+add_executable(DT100_relay src/DT100_relay.cpp)
+
 target_link_libraries(DT100_relay
-  ${catkin_LIBRARIES}
   ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
 )
 
 #Virtual Machine node

@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <signal.h>
 
-// virtual box, CLI extension, and XP snapshot must all installed/available.
-
 void shutdown(int sig)
 {
     system("VBoxManage controlvm \"XP\" poweroff");

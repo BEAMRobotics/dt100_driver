@@ -1,15 +1,14 @@
 #include <DT100_driver/DT100RelayClient.h>
+
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl_ros/point_cloud.h>
 #include <ros/time.h>
-
-#include <beam_utils/angles.h>
-#include <beam_utils/time.h>
 #include <string>
 
-DT100RelayClient::DT100RelayClient(boost::asio::io_service& io_service)
-    : socket_(io_service) {
+DT100RelayClient::DT100RelayClient(boost::asio::io_service &io_service)
+    : socket_(io_service)
+{
   nh_.param<std::string>("ip", ip_, "192.168.0.4");
   ROS_INFO("DTOO packets will be sent to %s:%i", ip_.c_str(), port_);
 
@@ -18,7 +17,8 @@ DT100RelayClient::DT100RelayClient(boost::asio::io_service& io_service)
   Receive();
 }
 
-void DT100RelayClient::Receive() {
+void DT100RelayClient::Receive()
+{
   socket_.async_receive_from(
       boost::asio::buffer(recv_buffer_), remote_endpoint_,
       boost::bind(&DT100RelayClient::HandleReceive, this,
@@ -26,9 +26,11 @@ void DT100RelayClient::Receive() {
                   boost::asio::placeholders::bytes_transferred));
 }
 
-void DT100RelayClient::HandleReceive(const boost::system::error_code& error,
-                                     std::size_t bytes_transferred) {
-  if (error) {
+void DT100RelayClient::HandleReceive(const boost::system::error_code &error,
+                                     std::size_t bytes_transferred)
+{
+  if (error)
+  {
     ROS_INFO("Receive failed: %s", error.message());
     return;
   }
@@ -37,7 +39,8 @@ void DT100RelayClient::HandleReceive(const boost::system::error_code& error,
   Receive();
 }
 
-void DT100RelayClient::ParseDT100() {
+void DT100RelayClient::ParseDT100()
+{
   // Parse DT100 bitstreams by:
   // 1) getting sonar parameters (latency in 100 microseconds)
   double num_beams =
@@ -60,11 +63,12 @@ void DT100RelayClient::ParseDT100() {
   double theta = 210;
   double del_theta = 120 / num_beams;
 
-  for (int i = 256; i < (256 + 2 * num_beams - 1); i += 2) {
+  for (int i = 256; i < (256 + 2 * num_beams - 1); i += 2)
+  {
     unsigned char r = (recv_buffer_[i] << 8 | recv_buffer_[i + 1]);
     double range = static_cast<double>(r) * range_res / 1000;
-    cloud.points[j].x = range * cos(beam::Deg2Rad(theta));
-    cloud.points[j].y = range * sin(beam::Deg2Rad(theta));
+    cloud.points[j].x = range * cos(theta * M_PI / 180);
+    cloud.points[j].y = range * sin(theta * M_PI / 180);
     cloud.points[j].z = 0;
     theta += del_theta;
     j++;
