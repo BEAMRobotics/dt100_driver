@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>DT100_driver</name>
+  <name>dt100_driver</name>
   <version>0.0.1</version>
   <description>
       ROS driver for Imagenex DT100 multibeam profiling sensor.

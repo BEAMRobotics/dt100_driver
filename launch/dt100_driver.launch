@@ -1,0 +1,10 @@
+<launch>
+
+  <node pkg="dt100_driver" type="dt100_relay" name="dt100_relay" output="screen">
+    <param name="ip" value="192.168.0.4" />
+  </node>
+
+  <node pkg="dt100_driver" type="dt100_virtual_machine" name="dt100_virtual_machine" output="screen">
+  </node>
+
+</launch>

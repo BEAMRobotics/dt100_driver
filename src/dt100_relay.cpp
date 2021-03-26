@@ -1,11 +1,11 @@
-#include <DT100_driver/DT100RelayClient.h>
+#include <dt100_driver/DT100RelayClient.h>
 
 #include <ros/ros.h>
 #include <boost/asio.hpp>
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "DT100_relay");
+  ros::init(argc, argv, "dt100_relay");
   try
   {
     boost::asio::io_service io_service;

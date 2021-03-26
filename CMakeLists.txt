@@ -1,10 +1,9 @@
-project(DT100_driver)
+project(dt100_driver)
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Boost REQUIRED)
 find_package(PCL 1.8 REQUIRED)
-find_package(beam REQUIRED utils)
 
 find_package(catkin REQUIRED
   COMPONENTS
@@ -50,16 +49,16 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Relay node
-add_executable(DT100_relay src/DT100_relay.cpp)
+add_executable(dt100_relay src/dt100_relay.cpp)
 
-target_link_libraries(DT100_relay
+target_link_libraries(dt100_relay
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
 #Virtual Machine node
-add_executable(DT100_virtual_machine src/DT100_virtual_machine.cpp)
+add_executable(dt100_virtual_machine src/dt100_virtual_machine.cpp)
 
-target_link_libraries(DT100_virtual_machine
+target_link_libraries(dt100_virtual_machine
    ${catkin_LIBRARIES}
 )
