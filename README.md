@@ -1,4 +1,4 @@
-# DT100_driver
+# dt100_driver
 
 ROS driver for the Imagenex DT100 multibeam profiling sonar. The driver:
 
