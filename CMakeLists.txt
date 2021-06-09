@@ -1,9 +1,8 @@
 project(dt100_driver)
-cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Boost REQUIRED)
-find_package(PCL 1.8 REQUIRED)
+find_package(PCL  REQUIRED)
 
 find_package(catkin REQUIRED
   COMPONENTS
