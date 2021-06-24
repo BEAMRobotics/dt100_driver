@@ -35,7 +35,7 @@ include_directories(
 ## Build ##
 # Relay library
 add_library(${PROJECT_NAME}
-  src/DT100RelayClient.cpp
+  src/dt100_relay_client.cpp
 )
 
 target_include_directories(${PROJECT_NAME}

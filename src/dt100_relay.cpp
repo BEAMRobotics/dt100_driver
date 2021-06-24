@@ -1,4 +1,4 @@
-#include <dt100_driver/DT100RelayClient.h>
+#include <dt100_driver/dt100_relay_client.h>
 
 #include <ros/ros.h>
 #include <boost/asio.hpp>

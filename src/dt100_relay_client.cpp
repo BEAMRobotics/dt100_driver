@@ -1,4 +1,4 @@
-#include <dt100_driver/DT100RelayClient.h>
+#include <dt100_driver/dt100_relay_client.h>
 
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
