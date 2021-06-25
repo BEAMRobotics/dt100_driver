@@ -51,8 +51,8 @@ class DT100RelayClient {
   boost::array<unsigned char, 2175> recv_buffer_;
 
   // node properties
-  std::string frameID_ = "DT100";
-  ros::NodeHandle nh_ = ros::NodeHandle{"dt100_relay"};
+  std::string frame_ID_{"DT100"};
+  ros::NodeHandle nh_ = ros::NodeHandle{"DT100"};
   ros::Publisher publisher_ =
-      nh_.advertise<sensor_msgs::PointCloud2>("DT100_scans", 1);
+      nh_.advertise<sensor_msgs::PointCloud2>("sonar_scans", 1);
 };

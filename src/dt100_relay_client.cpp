@@ -77,7 +77,7 @@ void DT100RelayClient::ParseDT100() {
   sensor_msgs::PointCloud2 msg;
   pcl::toROSMsg(cloud, msg);
   msg.header.stamp = stamp;
-  msg.header.frame_id = frameID_;
+  msg.header.frame_id = frame_ID_;
   publisher_.publish(msg);
   ros::spinOnce();
 }
