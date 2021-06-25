@@ -9,13 +9,30 @@ void shutdown(int sig) {
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "dt100_virtual_machine");
-  ros::NodeHandle nh;
+  try {
+    ros::NodeHandle nh = ros::NodeHandle{"DT100_VM"};
 
-  ROS_INFO("dt100_virtual_machine initialize");
+    // get params
+    std::string bridge_adapter;
+    nh.getParam("bridge_adapter", bridge_adapter);
 
-  system("VBoxManage startvm \"XP_32\"");
-  signal(SIGINT, shutdown);
+    if (bridge_adapter.empty()) {
+      throw std::invalid_argument{"bridge adapter must be specified."};
+    }
 
-  ros::spin();
+    // pass system calls
+    system("VBoxManage modifyvm \"XP_32\" --nic1 none");
+    std::string bridged_cmd =
+        "VBoxManage modifyvm \"XP_32\" --nic1 bridged --bridgeadapter1 " +
+        bridge_adapter;
+    system(bridged_cmd.c_str());
+    system("VBoxManage startvm \"XP_32\"");
+    signal(SIGINT, shutdown);
+
+    ros::spin();
+  } catch (std::exception &e) {
+    std::cerr << e.what() << std::endl;
+  }
+
   return 0;
 }
