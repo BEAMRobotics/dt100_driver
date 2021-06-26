@@ -33,7 +33,7 @@ class DT100RelayClient {
    * @param[in] bytes_transferred - number of bytes recieved during transfer
    */
   void HandleReceive(const boost::system::error_code& error,
-                     std::size_t bytes_transferred);
+                     const std::size_t& bytes_transferred);
 
   /**
    * @brief Converts recieved buffer in 83P format to point cloud
