@@ -9,7 +9,8 @@
 DT100RelayClient::DT100RelayClient(boost::asio::io_service &io_service)
     : socket_(io_service) {
   nh_.getParam("ip_address", ip_address_);
-  ROS_INFO("DT1OO packets will be sent to %s:%i", ip_address_.c_str(), port_);
+  ROS_INFO("DT1OO packets will be sent to %s:%i on the host machine",
+           ip_address_.c_str(), port_);
 
   socket_.open(udp::v4());
   socket_.bind(udp::endpoint(address::from_string(ip_address_), port_));
@@ -37,15 +38,25 @@ void DT100RelayClient::HandleReceive(const boost::system::error_code &error,
 
 void DT100RelayClient::ParseDT100() {
   // Parse DT100 bitstreams by:
-  // 1) getting sonar parameters (latency in 100 microseconds)
-  double num_beams =
-      static_cast<double>(recv_buffer_[70] << 8 | recv_buffer_[71]);
-  double range_res =
-      static_cast<double>(recv_buffer_[85] << 8 | recv_buffer_[86]);
-  double ping_latency =
-      static_cast<double>(recv_buffer_[118] << 8 | recv_buffer_[119]);
-  double data_latency =
-      static_cast<double>(recv_buffer_[120] << 8 | recv_buffer_[121]);
+  // 1) getting sonar parameters, where:
+  //
+  //    num_beams: units [m]
+  //    sector_size: units [degrees]
+  //    range_resolution: units [mm]
+  //    ping_latency: units [100 microseconds]
+  //    data_latency: units [100 microseconds]
+
+  int num_beams = static_cast<int>(recv_buffer_[70] << 8 | recv_buffer_[71]);
+  float sector_size =
+      static_cast<float>(recv_buffer_[74] << 8 | recv_buffer_[75]);
+  float acoustic_range =
+      static_cast<float>(recv_buffer_[79] << 8 | recv_buffer_[80]);
+  float range_resolution =
+      static_cast<float>(recv_buffer_[85] << 8 | recv_buffer_[86]);
+  float ping_latency =
+      static_cast<float>(recv_buffer_[118] << 8 | recv_buffer_[119]);
+  float data_latency =
+      static_cast<float>(recv_buffer_[120] << 8 | recv_buffer_[121]);
 
   // 2) converting sonar range and bearing measurements into xyz point cloud
   pcl::PointCloud<pcl::PointXYZ> cloud;
@@ -55,17 +66,44 @@ void DT100RelayClient::ParseDT100() {
   cloud.points.resize(cloud.width * cloud.height);
 
   int j = 0;
-  double theta = 210;
-  double del_theta = 120 / num_beams;
+  float theta = start_angle_;
+  const float del_theta = sector_size / static_cast<float>(num_beams);
+  bool exceeds_acoustic_range = false;
 
+  // iterate through beams
   for (int i = 256; i < (256 + 2 * num_beams - 1); i += 2) {
-    unsigned char r = (recv_buffer_[i] << 8 | recv_buffer_[i + 1]);
-    double range = static_cast<double>(r) * range_res / 1000;
-    cloud.points[j].x = range * cos(theta * M_PI / 180);
-    cloud.points[j].y = range * sin(theta * M_PI / 180);
+    // get range
+    float range =
+        static_cast<float>(recv_buffer_[i] << 8 | recv_buffer_[i + 1]);
+    float corrected_range = range * range_resolution / 1000;  // units [m]
+
+    // check range
+    if (corrected_range < min_range_ && corrected_range != 0.0) {
+      ROS_WARN("Measured range [%f m] below minimum allowable range [%f m]",
+               corrected_range, min_range_);
+      continue;
+    } else if (corrected_range > acoustic_range) {
+      exceeds_acoustic_range = true;
+    } else if (corrected_range > max_range_) {
+      ROS_WARN("Measured range [%f m] exceeds maximum allowable range [%f m]",
+               corrected_range, max_range_);
+      continue;
+    }
+
+    // populate point cloud
+    cloud.points[j].x = corrected_range * cos(theta * M_PI / 180);
+    cloud.points[j].y = corrected_range * sin(theta * M_PI / 180);
     cloud.points[j].z = 0;
+
+    // increment
     theta += del_theta;
     j++;
+  }
+
+  if (exceeds_acoustic_range) {
+    ROS_WARN(
+        "Measured range exceeds acoustic range. Manually adjust settings in "
+        "DT100.exe to suite");
   }
 
   // 3) stamping sonar pings in ROS time
