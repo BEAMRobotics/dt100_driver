@@ -3,7 +3,7 @@
 #include <signal.h>
 
 void shutdown(int sig) {
-  system("VBoxManage controlvm \"XP_32\" acpipowerbutton");
+  system("VBoxManage controlvm \"Windows_XP_32_DT100\" acpipowerbutton");
   ros::shutdown();
 }
 
@@ -21,12 +21,13 @@ int main(int argc, char **argv) {
     }
 
     // pass system calls
-    system("VBoxManage modifyvm \"XP_32\" --nic1 none");
+    system("VBoxManage modifyvm \"Windows_XP_32_DT100\" --nic1 none");
     std::string bridged_cmd =
-        "VBoxManage modifyvm \"XP_32\" --nic1 bridged --bridgeadapter1 " +
+        "VBoxManage modifyvm \"Windows_XP_32_DT100\" --nic1 bridged "
+        "--bridgeadapter1 " +
         bridge_adapter;
     system(bridged_cmd.c_str());
-    system("VBoxManage startvm \"XP_32\"");
+    system("VBoxManage startvm \"Windows_XP_32_DT100\"");
     signal(SIGINT, shutdown);
 
     ros::spin();
