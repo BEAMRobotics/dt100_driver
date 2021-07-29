@@ -3,7 +3,7 @@
 ## Description
 ROS driver for the Imagenex DT100 multibeam profiling sonar. The driver:
 
-  1. Launches a Windows XP virtual machine (VM) in headless mode, which then runs DT100.exe automatically on VM up-start. During execution, DT100.exe recieves raw data from the DT100 sonar and then processes these packets using its propriatary beam-forming algorithms. Data packets are then output from DT100.exe in 83P Profile Point format, which is a format propriatary to Imagenex
+  1. Launches a Windows XP virtual machine (VM), which then runs DT100.exe automatically on VM up-start. During execution, DT100.exe recieves raw data from the DT100 sonar and then processes these packets using its propriatary beam-forming algorithms. Data packets are then output from DT100.exe in 83P Profile Point format, which is a format propriatary to Imagenex
   2. Data packets from DT100.exe are then parsed by the DT100_relay node, which converts these packets to **sensor_msgs/pointcloud2** messages. These messages are then published on the topic **/DT100_scans**
 
 ## Dependency

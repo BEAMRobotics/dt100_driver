@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
         "VBoxManage modifyvm \"XP_32\" --nic1 bridged --bridgeadapter1 " +
         bridge_adapter;
     system(bridged_cmd.c_str());
-    system("VBoxManage startvm \"XP_32\" --type headless");
+    system("VBoxManage startvm \"XP_32\"");
     signal(SIGINT, shutdown);
 
     ros::spin();
