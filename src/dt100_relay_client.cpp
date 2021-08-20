@@ -12,12 +12,6 @@ DT100RelayClient::DT100RelayClient(boost::asio::io_service &io_service)
   ROS_INFO("DT1OO packets will be sent to %s:%i on the host machine",
            ip_address_.c_str(), port_);
 
-  // Set option to join a multicast group
-  boost::asio::ip::address multicast_address =
-      boost::asio::ip::address::from_string(ip_address_);
-  boost::asio::ip::multicast::join_group option(multicast_address);
-  socket_.set_option(option);
-
   // open and bind to socket
   socket_.open(udp::v4());
   socket_.bind(udp::endpoint(address::from_string(ip_address_), port_));
