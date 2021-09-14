@@ -1,11 +1,12 @@
 <launch>
-
+  <!-- virtual machine -->
   <node pkg="dt100_driver" type="dt100_virtual_machine" name="DT100_VM" output="screen">
-    <param name="bridge_adapter" value="enp1s0" />
+    <param name="bridge_adapter" value="enp1s0" /> <!-- required -->
+    <param name="headless" value="true" />
   </node>
 
+  <!-- relay -->
   <node pkg="dt100_driver" type="dt100_relay" name="DT100" output="screen">
-    <param name="ip_address" value="192.168.0.4" />
   </node>
 
 </launch>

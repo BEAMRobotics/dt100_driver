@@ -1,5 +1,7 @@
 #pragma once
 
+#include <dt100_driver/global_variables.h>
+
 #include <ros/node_handle.h>
 #include <ros/publisher.h>
 #include <sensor_msgs/PointCloud2.h>
@@ -62,9 +64,8 @@ class DT100RelayClient {
    */
   void ParseDT100();
 
-  // remote endpoint parameters
+  // remote endpoint
   int port_{4040};
-  std::string ip_address_{"192.168.0.4"};
 
   // I/O objects
   udp::socket socket_;
@@ -73,8 +74,6 @@ class DT100RelayClient {
 
   // DT100 properties
   float start_angle_ = 210;  // units [degrees]
-  float min_range_ = 0.1;    // units [m]
-  float max_range_ = 100;    // units [m]
 
   // node properties
   std::string frame_ID_{"DT100"};
