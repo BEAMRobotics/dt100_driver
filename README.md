@@ -1,6 +1,6 @@
 # dt100_driver
 
-This repository contains code for a operating the [DT100 multibeam sonar](https://imagenex.com/products/dt100) from Imagenex within ROS by:
+This repository contains code for operating the [DT100 multibeam sonar](https://imagenex.com/products/dt100) from Imagenex within ROS by:
 
   1. Launching a Windows XP virtual machine (VM) which runs DT100.exe automatically on VM up-start. DT100.exe has been configured with the following parameters:
       - Units: m
@@ -16,12 +16,8 @@ This repository contains code for a operating the [DT100 multibeam sonar](https:
           - Profile Point Filter: Maximum Return
           - Minimum Depth (below sonar): 0.1m
           - Maximum Depth (below sonar): 100m
-  2. During execution, DT100.exe receives raw data from the DT100 sonar head and then processes these packets using its proprietary beam-forming algorithms. Data packets are then output from DT100.exe in 83P Profile Point format (see docs/Supporting_Documents.pdf page 37), which is a format proprietary to Imagenex
-  3. 83P Profile Point data packets from DT100.exe are then parsed by the DT100_relay node, which converts these packets to sensor_msgs/pointcloud2 messages. These messages are then published on the topic /DT100_scans using the following frame convention.
-
-  <p align='center'>
-      <img src="./docs/sonar_frame.pdf" alt="sonar_frame" width="800"/>
-  </p>
+  2. During execution, DT100.exe receives raw data from the DT100 sonar head and then processes these packets using its proprietary beam-forming algorithms. Data packets are then output from DT100.exe in [83P Profile Point format](docs/supporting_documents.pdf), which is a format proprietary to Imagenex
+  3. 83P Profile Point data packets from DT100.exe are then parsed by the DT100_relay node, which converts these packets to sensor_msgs/pointcloud2 messages. These messages are then published on the topic /DT100_scans using the following [frame convention](docs/sonar_frame.pdf).
 
 ---
 
