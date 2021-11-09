@@ -1,8 +1,12 @@
 <launch>
   <!-- virtual machine -->
   <node pkg="dt100_driver" type="dt100_virtual_machine" name="DT100_VM" output="screen">
-    <param name="bridge_adapter" value="enp0s31f6" /> <!-- required -->
-    <param name="headless" value="false" />
+  </node>
+
+  <node pkg="dt100_driver" type="dt100_vm.bash" name="dt100_vm_node" output="screen">
+    <param name="bridge_adapter" value="eno1" /> <!-- required -->
+    <param name="headless" value="true" />
+    <param name="add_network_interface" value="true" />
   </node>
 
   <!-- relay -->
