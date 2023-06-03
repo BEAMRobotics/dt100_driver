@@ -1,7 +1,5 @@
 #pragma once
 
-#include <dt100_driver/global_variables.h>
-
 #include <ros/node_handle.h>
 #include <ros/publisher.h>
 #include <sensor_msgs/PointCloud2.h>
@@ -64,8 +62,11 @@ class DT100RelayClient {
    */
   void ParseDT100();
 
+  // ip address
+  const std::string ip_address_{"192.168.0.4"};
+
   // remote endpoint
-  int port_{4040};
+  const int port_{4040};
 
   // I/O objects
   udp::socket socket_;
@@ -73,10 +74,10 @@ class DT100RelayClient {
   boost::array<unsigned char, 2175> recv_buffer_;
 
   // DT100 properties
-  float start_angle_ = 210;  // units [degrees]
+  const float start_angle_ = 210;  // units [degrees]
 
   // node properties
-  std::string frame_ID_{"DT100"};
+  const std::string frame_ID_{"DT100"};
   ros::NodeHandle nh_ = ros::NodeHandle{"DT100"};
   ros::Publisher publisher_ =
       nh_.advertise<sensor_msgs::PointCloud2>("sonar_scans", 10);
