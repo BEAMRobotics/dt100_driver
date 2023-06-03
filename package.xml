@@ -5,10 +5,10 @@
   <description>
       ROS driver for Imagenex DT100 multibeam profiling sensor.
   </description>
-  <maintainer email="adthoms@uwaterloo.ca">Alexander Thoms</maintainer>
+  <maintainer email="adthoms@ucla.edu">Alexander Thoms</maintainer>
   <maintainer email="gearle@uwaterloo.ca">Gabriel Earle</maintainer>
   <license>BSD</license>
-  <author email="adthoms@uwaterloo.ca">Alexander Thoms</author>
+  <author email="adthoms@ucla.edu">Alexander Thoms</author>
   <author email="gearle@uwaterloo.ca">Gabriel Earle</author>
 
   <buildtool_depend>catkin</buildtool_depend>

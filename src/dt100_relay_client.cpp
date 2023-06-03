@@ -9,11 +9,11 @@
 DT100RelayClient::DT100RelayClient(boost::asio::io_service &io_service)
     : socket_(io_service) {
   ROS_INFO("DT1OO packets will be sent to %s:%i on the host machine",
-           IP_ADDRESS.c_str(), port_);
+           ip_address_.c_str(), port_);
 
   // open and bind to socket
   socket_.open(udp::v4());
-  socket_.bind(udp::endpoint(address::from_string(IP_ADDRESS), port_));
+  socket_.bind(udp::endpoint(address::from_string(ip_address_), port_));
   Receive();
 }
 

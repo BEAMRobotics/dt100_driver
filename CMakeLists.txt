@@ -55,10 +55,3 @@ target_link_libraries(dt100_relay
   ${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
-
-#Virtual Machine node
-add_executable(dt100_virtual_machine src/dt100_virtual_machine.cpp)
-
-target_link_libraries(dt100_virtual_machine
-   ${catkin_LIBRARIES}
-)
