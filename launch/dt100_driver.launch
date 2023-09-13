@@ -1,7 +1,7 @@
 <launch>
   <!-- virtual machine -->
   <node pkg="dt100_driver" type="dt100_vm.bash" name="dt100_vm_node" output="screen">
-    <param name="bridge_adapter" value="enx000fc910b495" /> <!-- required -->
+    <param name="bridge_adapter" value="enx000fc910b497" /> <!-- required -->
     <param name="headless" value="true" />
   </node>
 

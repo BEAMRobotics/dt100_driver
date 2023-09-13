@@ -58,7 +58,7 @@ roslaunch dt100_driver dt100_driver.launch
 in `dt100_driver.launch`, you will see two parameters:
 
 ```xml
-<param name="bridge_adapter" value="enx000fc910b495" />
+<param name="bridge_adapter" value="enx000fc910b497" />
 <param name="headless" value="true" />
 ```
 
