@@ -8,7 +8,7 @@ rosbash_param headless_ "headless" "True"
 # print params
 echo "dt100_vm_node parameters loaded:"
 echo "bridge_adapter_: ${bridge_adapter_}"
-echo "headless_: ${bridge_adapter_}"
+echo "headless_: ${headless_}"
 
 # set bridged adapter
 VBoxManage modifyvm "Windows_XP_32_DT100" --nic1 none

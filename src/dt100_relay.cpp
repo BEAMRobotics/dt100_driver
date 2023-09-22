@@ -8,11 +8,9 @@ int main(int argc, char **argv) {
   try {
     boost::asio::io_service io_service;
     DT100RelayClient client(io_service);
-    io_service.run();
 
     while (ros::ok()) {
-      ros::spinOnce();
-      ros::Duration(0.0001).sleep();
+      io_service.run();
     }
   } catch (std::exception &e) {
     std::cerr << e.what() << std::endl;
